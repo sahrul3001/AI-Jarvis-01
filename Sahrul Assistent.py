@@ -3,6 +3,10 @@ import pyttsx3
 import pywhatkit
 import datetime
 import wikipedia
+from selenium import webdriver
+from selenium.webdriver.common.keys import Keys
+import sys
+
 
 print("Jarvis")
 MASTER = "sahrul"
@@ -45,7 +49,7 @@ def take_command():
                 talk(command)
 
     except:
-        pass
+        print("Exit")
 
     return command
 
@@ -67,6 +71,46 @@ def run_jarvis():
         talk("searching wikipedia")
         print(info)
         talk(info)
+    elif "login" in command:
+        talk("Login Elearning")
+        browser = webdriver.Chrome('webdriver/chromedriver.exe')
+        link = open("link.txt")
+        el = link.readlines()
+        url = el[0]
+        browser.get(url)
+        file = open("akun.txt")
+        filebaca = file.readlines()
+        username = filebaca[0]
+        password = filebaca[1]
+        login = browser.find_element_by_name("username")
+        login.send_keys(username, Keys.TAB, password, Keys.ENTER)
+    elif "sigma" in command:
+        def sigma(bb,ba):
+            k = int(input("Konstanta Pertama : "))
+            k1 = int(input("Konstanta selanjutnya: "))
+            listh = []
+            for i in range(bb, ba):
+                k = k
+                k1 = k1
+                c = i * k + k1
+                listh.append(c)
+            k *= ba
+            k += k1
+            listh.append(k)
+            print(listh)
+            hasil = sum(listh)
+            print("Hasil Nilai Sigma =", hasil)
+            talk(f"The result of sigma is{hasil}")
+        print("=== Rumus Notasi Sigma ===")
+        talk("calculate sigma, please enter a number")
+        bb = int(input("Masukan Batas Bawah : "))
+        ba = int(input("Masukan Batas Atas : "))
+        sigma(bb,ba)
+    elif "stop" in command:
+        talk(f"Okey, run me again if you need help {MASTER}")
+        print("exit Program")
+        sys.exit()
+
     else:
         talk("not any intruction")
         print(command)
