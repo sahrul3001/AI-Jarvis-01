@@ -143,3 +143,4 @@ while True:
 
     talk(f"I am {AI} what do you want")
     run_jarvis()
+    input()
