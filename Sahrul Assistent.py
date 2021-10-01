@@ -1,5 +1,4 @@
-import speech_recognition as sr
-import pyttsx3
+from friday import Friday
 import pywhatkit
 import datetime
 import wikipedia
@@ -9,72 +8,41 @@ import sys
 import time as t
 
 AI = "Friday"
-print(AI)
 MASTER = "sahrul"
-mendengarkan = sr.Recognizer()
-engine = pyttsx3.init("sapi5")
-# kecepatan baca
-rate = engine.getProperty('rate')
-engine.setProperty('rate', 125)
-# jenis suara [0] male [1] female
-voices = engine.getProperty('voices')
-engine.setProperty('voice', voices[1].id)
-
-
-def talk(text):
-    engine.say(text)
-    engine.runAndWait()
 
 
 def wishMe():
     hour = int(datetime.datetime.now().hour)
 
     if hour >= 0 and hour < 12:
-        talk("Hello Good Morning" + MASTER)
+        Friday().talk("Hello Good Morning" + MASTER)
     elif hour >= 12 and hour < 18:
-        talk("Hello Good Afternoon" + MASTER)
+        Friday().talk("Hello Good Afternoon" + MASTER)
     else:
-        talk("Haello Good Evening" + MASTER)
+        Friday().talk("Hello Good Evening" + MASTER)
+    Friday().talk(f"I'm {AI} what do you want")
 
 
-def take_command():
+def run_friday():
     try:
-        with sr.Microphone() as source:
-            print("mendengarkan")
-            voice = mendengarkan.listen(source)
-            command = mendengarkan.recognize_google(voice)
-            command = command.lower()
-            if "friday" in command:
-                print(command)
-                command = command.replace("friday", "")
-                talk(command)
-                return command
-            else:
-                command = False
-    except:
-        print("no command")
-
-
-def run_jarvis():
-    try:
-        command = take_command()
+        command = Friday().take_command()
         if 'play' in command:
             song = command.replace("play", "")
-            talk("playing" + song)
+            Friday().talk("playing" + song)
             print("playing" + song)
             pywhatkit.playonyt(song)
         elif "time" in command:
             time = datetime.datetime.now().strftime("%I:%M %p")
             print(time)
-            talk("time now is " + time)
+            Friday().talk("time now is " + time)
         elif "wikipedia" in command:
             src = command.replace("wikipedia", "")
             info = wikipedia.summary(src, sentences=1)
-            talk("searching wikipedia")
+            Friday().talk("searching wikipedia")
             print(info)
-            talk(info)
+            Friday().talk(info)
         elif "login" in command:
-            talk("Login Elearning")
+            Friday().talk("Login Elearning")
             browser = webdriver.Chrome('webdriver/chromedriver.exe')
             link = open("elearning/link.txt")
             el = link.readlines()
@@ -108,39 +76,24 @@ def run_jarvis():
                 print(listh)
                 hasil = sum(listh)
                 print("Hasil Nilai Sigma =", hasil)
-                talk(f"The result of sigma is{hasil}")
+                Friday().talk(f"The result of sigma is{hasil}")
             print("=== Rumus Notasi Sigma ===")
-            talk("calculate sigma, please enter a number")
+            Friday().talk("calculate sigma, please enter a number")
             bb = int(input("Masukan Batas Bawah : "))
             ba = int(input("Masukan Batas Atas : "))
             sigma(bb, ba)
         elif "say hello" in command:
-            talk("Hello Para Peserta Kelas, Reguler, Bagaimana Kabar kalian")
+            Friday().talk("Hello Para Peserta Kelas, Reguler, Bagaimana Kabar kalian")
             print("Hello Para Peserta Kelas Reguler")
         elif "stop" in command:
-            talk(f"Okey, run me again if you need help {MASTER}")
+            Friday().talk(f"Okey, run me again if you need help {MASTER}")
             print("exit Program")
             sys.exit()
         else:
-            talk("not any intruction")
+            Friday().talk("not any intruction")
             print(command)
     except:
-        talk(f"Call me {AI} frist")
+        Friday().talk(f"Call me {AI} frist")
 
 
 wishMe()
-
-while True:
-    MASTER = "sahrul"
-    mendengarkan = sr.Recognizer()
-    engine = pyttsx3.init("sapi5")
-    # kecepatan baca
-    rate = engine.getProperty('rate')
-    engine.setProperty('rate', 125)
-    # jenis suara [0] male [1] female
-    voices = engine.getProperty('voices')
-    engine.setProperty('voice', voices[1].id)
-
-    talk(f"I am {AI} what do you want")
-    run_jarvis()
-    input()
